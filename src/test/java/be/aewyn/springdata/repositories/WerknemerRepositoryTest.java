@@ -4,6 +4,7 @@ import be.aewyn.springdata.domain.Filiaal;
 import be.aewyn.springdata.domain.Werknemer;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
@@ -37,5 +38,21 @@ class WerknemerRepositoryTest extends AbstractTransactionalJUnit4SpringContextTe
                 .allSatisfy(werknemer -> assertThat(werknemer.getVoornaam().toUpperCase()).startsWith("J"))
                 .extracting(Werknemer::getFiliaal)
                 .extracting(Filiaal::getNaam);
+    }
+
+    @Test
+    void eerstePagina(){
+        var page = repository.findAll(PageRequest.of(0,2));
+        assertThat(page.getContent()).hasSize(2);
+        assertThat(page.hasPrevious()).isFalse();
+        assertThat(page.hasNext()).isTrue();
+    }
+
+    @Test
+    void tweedePagina(){
+        var page = repository.findAll(PageRequest.of(1,2));
+        assertThat(page.getContent()).hasSize(1);
+        assertThat(page.hasPrevious()).isTrue();
+        assertThat(page.hasNext()).isFalse();
     }
 }
