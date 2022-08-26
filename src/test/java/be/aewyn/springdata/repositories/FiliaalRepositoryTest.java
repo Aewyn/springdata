@@ -110,4 +110,11 @@ public class FiliaalRepositoryTest extends AbstractTransactionalJUnit4SpringCont
         assertThat(repository.findGemiddeldeOmzet())
                 .isEqualByComparingTo(jdbcTemplate.queryForObject("select avg(omzet) from filialen", BigDecimal.class));
     }
+
+    @Test
+    void findMetHoogsteOmzet(){
+        assertThat(repository.findMetHoogsteOmzet())
+                .hasSize(countRowsInTableWhere(FILIALEN, "omzet = (select max(omzet) from filialen)"))
+                .first().extracting(Filiaal::getNaam).isEqualTo(jdbcTemplate.queryForObject("select naam from filialen where omzet = (select max(omzet) from filialen)", String.class));
+    }
 }

@@ -8,8 +8,8 @@ public class Werknemer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private long voornaam;
-    private long familienaam;
+    private String voornaam;
+    private String familienaam;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "filiaalId")
     private Filiaal filiaal;
@@ -18,11 +18,11 @@ public class Werknemer {
         return id;
     }
 
-    public long getVoornaam() {
+    public String getVoornaam() {
         return voornaam;
     }
 
-    public long getFamilienaam() {
+    public String getFamilienaam() {
         return familienaam;
     }
 

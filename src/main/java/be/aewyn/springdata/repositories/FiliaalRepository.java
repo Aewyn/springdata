@@ -17,4 +17,6 @@ public interface FiliaalRepository extends JpaRepository<Filiaal, Long>{
 
     @Query("select avg(f.omzet) from Filiaal f")
     BigDecimal findGemiddeldeOmzet();
+
+    List<Filiaal> findMetHoogsteOmzet();
 }
