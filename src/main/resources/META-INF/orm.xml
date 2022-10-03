@@ -13,7 +13,7 @@
         <query>
             select w.familienaam as familienaam, count(w) as aantal
             from Werknemer w
-            group by w.famlienaam
+            group by w.familienaam
         </query>
     </named-query>
 </entity-mappings>

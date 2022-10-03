@@ -2,6 +2,7 @@ package be.aewyn.springdata.repositories;
 
 import be.aewyn.springdata.domain.Filiaal;
 import be.aewyn.springdata.domain.Werknemer;
+import be.aewyn.springdata.projections.AantalWerknemersPerFamilienaam;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
@@ -54,5 +55,16 @@ class WerknemerRepositoryTest extends AbstractTransactionalJUnit4SpringContextTe
         assertThat(page.getContent()).hasSize(1);
         assertThat(page.hasPrevious()).isTrue();
         assertThat(page.hasNext()).isFalse();
+    }
+
+    @Test
+    void findAantalWerknemersPerFamilienaam(){
+        assertThat(repository.findAantalWerknemersPerFamilienaam())
+                .hasSize(jdbcTemplate.queryForObject("select count(distinct familienaam) from werknemers", Integer.class))
+                .filteredOn(aantalPerFamilienaam -> aantalPerFamilienaam.getFamilienaam().equals("Dalton"))
+                .hasSize(1)
+                .first()
+                .extracting(AantalWerknemersPerFamilienaam::getAantal)
+                .isEqualTo(super.countRowsInTableWhere(WERKNEMERS, "familienaam = 'Dalton'"));
     }
 }
